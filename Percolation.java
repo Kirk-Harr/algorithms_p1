@@ -14,7 +14,7 @@ public class Percolation {
 
     // Private methods for utility functions
     private int xyTo1D(int row, int col){
-        return ((row-1)*gridSize) + col;
+        return ((row-1)*gridSize) + col-1;
     }
     private WeightedQuickUnionUF getGrid() {
         return grid;
@@ -35,33 +35,63 @@ public class Percolation {
     public boolean isOpen(int row, int col) {
         indexInBounds(row, col);
         int position = xyTo1D(row, col);
-        return position-1 != grid.find(position-1);
+        return position != grid.find(position);
     }
 
     // is site (row, col) full?
     public boolean isFull(int row, int col) {
-        int position = xyTo1D(row, col);
-        int leftNeighbor = xyTo1D(row, col-1);
-        int rightNeighbor = xyTo1D(row, col+1);
-        int upperNeighbor = xyTo1D(row-1, col);
-        return (grid.connected(position, leftNeighbor) || grid.connected(position, rightNeighbor) || grid.connected(position, upperNeighbor));
+        if (row == 1 && col == 1){
+            return true;
+        }
+        else {
+            int position = xyTo1D(row, col);
+            int leftNeighbor = xyTo1D(row, col - 1);
+            int rightNeighbor = xyTo1D(row, col + 1);
+            int upperNeighbor = xyTo1D(row - 1, col);
+            return (grid.connected(position, leftNeighbor) || grid.connected(position, rightNeighbor) || grid.connected(position, upperNeighbor));
+        }
     }
 
     // number of open sites
     public int numberOfOpenSites() {
-        return 0;
+        return (gridSize*gridSize)-grid.count();
     }
 
     // does the system percolate?
     public boolean percolates() {
-        return false;
+        int i = 1;
+        boolean percolation = false;
+        boolean loopContinue = true;
+        while (i <=gridSize && loopContinue) {
+            for (int j = 1; j<=gridSize; j++){
+                if (i == gridSize) {
+                    if (isOpen(i,j) && isFull(i,j)) {
+                        percolation = true;
+                        i++;
+                        break;
+                    }
+                }
+                else if(isOpen(i,j) && isFull(i,j)){
+                    i++;
+                }
+                else if(j==gridSize){
+                    loopContinue = false;
+                }
+            }
+        }
+        return percolation;
     }
 
     // test client (optional)
     public static void main(String[] args) {
-        Percolation p = new Percolation(20);
-        p.open(1,1);
-        p.open(1,3);
-        System.out.println("True is " + p.getGrid().connected(1,3));
+        Percolation p = new Percolation(3);
+
+        p.open(1,2);
+        p.open(2,2);
+        p.open(3,2);
+        System.out.println("Count is " + p.numberOfOpenSites());
+
+        System.out.println("Percolation is " + p.percolates());
+
     }
 }
