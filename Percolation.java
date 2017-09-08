@@ -32,22 +32,22 @@ public class Percolation {
         int position = xyTo1D(row, col);
         openSites[row-1][col-1] = true;
         if (row == 1) {
-            grid.union(xyTo1D(row, col), top);
+            grid.union(position, top);
         }
         if (row == gridSize) {
-            grid.union(xyTo1D(row, col), bottom);
+            grid.union(position, bottom);
         }
         if (col > 1 && isOpen(row, col - 1)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row, col - 1));
+            grid.union(position, xyTo1D(row, col - 1));
         }
         if (col < gridSize && isOpen(row, col + 1)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row, col + 1));
+            grid.union(position, xyTo1D(row, col + 1));
         }
         if (row > 1 && isOpen(row - 1, col)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row - 1, col));
+            grid.union(position, xyTo1D(row - 1, col));
         }
         if (row < gridSize && isOpen(row + 1, col)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row + 1, col));
+            grid.union(position, xyTo1D(row + 1, col));
         }
     }
 
