@@ -5,25 +5,31 @@ public class PercolationStats {
     private double[] percResults;
     private Percolation p;
     private int t;
+    private int n;
 
     public PercolationStats(int n, int trials) {
         t = trials;
+        this.n = n;
         percResults = new double[trials];
         for (int i = 1; i<= trials; i++){
             p = new Percolation(n);
-            while (!p.percolates()) {
-                int rows[] = StdRandom.permutation(n);
-                for (int r: rows){
-                    for (int k = 1; k<=n/2; k++) {
-                        int col = StdRandom.uniform(1, n);
-                        if (!p.isOpen(r + 1, col)) {
-                            p.open(r + 1, col);
-                        }
-                    }
-                }
+            int[] perm = StdRandom.permutation(n*n);
+            for (int k: perm){
+                int col = intToCol(k);
+                int row = intToRow(k);
+                p.open(row, col);
+                if (p.percolates()) break;
             }
             percResults[i-1] = ((double)p.numberOfOpenSites()/(double)(n*n));
         }
+    }
+
+    private int intToCol(int input) {
+        return (input % n)+1;
+    }
+
+    private int intToRow(int input){
+        return (input / n)+1;
     }
 
     // sample mean of percolation threshold
@@ -48,6 +54,7 @@ public class PercolationStats {
 
     // test client (described below)
     public static void main(String[] args) {
+
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
         PercolationStats ps = new PercolationStats(n, trials);
@@ -59,6 +66,5 @@ public class PercolationStats {
         System.out.printf(format, mean, ps.mean());
         System.out.printf(format, stddev, ps.stddev());
         System.out.printf(format, confidenceInterval, ciOutput);
-
     }
 }
