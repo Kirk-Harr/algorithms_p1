@@ -21,14 +21,11 @@ public class Percolation {
     private int xyTo1D(int row, int col){
         return ((row-1)*gridSize) + col-1;
     }
-    private WeightedQuickUnionUF getGrid() {
-        return grid;
-    }
-
     private void indexInBounds(int row, int col){
         if (row <= 0 || row > gridSize) throw new IndexOutOfBoundsException("row index " + row + " out of bounds");
         else if (col <= 0 || col > gridSize) throw new IndexOutOfBoundsException("col index " + col + " out of bounds");
     }
+
     // open site (row, col) if it is not open already
     public void open(int row, int col) {
         indexInBounds(row, col);
@@ -40,7 +37,6 @@ public class Percolation {
         if (row == gridSize) {
             grid.union(xyTo1D(row, col), bottom);
         }
-
         if (col > 1 && isOpen(row, col - 1)) {
             grid.union(xyTo1D(row, col), xyTo1D(row, col - 1));
         }
@@ -79,16 +75,5 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
-        Percolation p = new Percolation(3);
-
-        p.open(2,1);
-        p.open(2,3);
-        p.open(3,1);
-        p.open(2,2);
-        p.open(1,3);
-        System.out.println("Count is " + p.numberOfOpenSites());
-
-        System.out.println("(3,1) is full? " + p.isFull(3,1));
-
     }
 }

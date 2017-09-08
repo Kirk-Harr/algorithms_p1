@@ -4,15 +4,17 @@ public class PercolationStats {
     // perform trials independent experiments on an n-by-n grid
     private double[] percResults;
     private Percolation p;
+    private int t;
 
     public PercolationStats(int n, int trials) {
+        t = trials;
         percResults = new double[trials];
         for (int i = 1; i<= trials; i++){
             p = new Percolation(n);
             while (!p.percolates()) {
                 int rows[] = StdRandom.permutation(n);
                 for (int r: rows){
-                    for (int k = 1; k<=n; k++) {
+                    for (int k = 1; k<=n/2; k++) {
                         int col = StdRandom.uniform(1, n);
                         if (!p.isOpen(r + 1, col)) {
                             p.open(r + 1, col);
@@ -36,12 +38,12 @@ public class PercolationStats {
 
     // low  endpoint of 95% confidence interval
     public double confidenceLo() {
-        return 0.0;
+        return StdStats.mean(percResults)+((StdStats.stddev(percResults)*1.96)/Math.sqrt(t));
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return 0.0;
+        return StdStats.mean(percResults)-((StdStats.stddev(percResults)*1.96)/Math.sqrt(t));
     }
 
     // test client (described below)
@@ -53,7 +55,7 @@ public class PercolationStats {
         String mean = "mean";
         String stddev = "stddev";
         String confidenceInterval = "95% confidence interval";
-        String ciOutput = "[ " + ps.confidenceLo() + "," + ps.confidenceHi() + " ]";
+        String ciOutput = "[ " + ps.confidenceLo() + ", " + ps.confidenceHi() + " ]";
         System.out.printf(format, mean, ps.mean());
         System.out.printf(format, stddev, ps.stddev());
         System.out.printf(format, confidenceInterval, ciOutput);
