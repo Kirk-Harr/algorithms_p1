@@ -2,6 +2,8 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Percolation {
     // create n-by-n grid, with all sites blocked
     private WeightedQuickUnionUF grid;
@@ -29,25 +31,25 @@ public class Percolation {
     // open site (row, col) if it is not open already
     public void open(int row, int col) {
         indexInBounds(row, col);
-        int position = xyTo1D(row, col);
+        AtomicInteger position = new AtomicInteger(xyTo1D(row, col));
         openSites[row-1][col-1] = true;
         if (row == 1) {
-            grid.union(xyTo1D(row, col), top);
+            grid.union(position.get(), top);
         }
         if (row == gridSize) {
-            grid.union(xyTo1D(row, col), bottom);
+            grid.union(position.get(), bottom);
         }
         if (col > 1 && isOpen(row, col - 1)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row, col - 1));
+            grid.union(position.get(), xyTo1D(row, col - 1));
         }
         if (col < gridSize && isOpen(row, col + 1)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row, col + 1));
+            grid.union(position.get(), xyTo1D(row, col + 1));
         }
         if (row > 1 && isOpen(row - 1, col)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row - 1, col));
+            grid.union(position.get(), xyTo1D(row - 1, col));
         }
         if (row < gridSize && isOpen(row + 1, col)) {
-            grid.union(xyTo1D(row, col), xyTo1D(row + 1, col));
+            grid.union(position.get(), xyTo1D(row + 1, col));
         }
     }
 
