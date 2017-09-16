@@ -1,5 +1,5 @@
 import java.util.Iterator;
-import java.util.ListIterator;
+
 
 public class Deque<Item> implements Iterable<Item> {
     private class Node {
@@ -92,5 +92,16 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // unit testing (optional)
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+        Deque<String> d = new Deque<>();
+        d.addFirst("second");
+        d.addLast("third");
+        d.addLast("fourth");
+        d.addFirst("first");
+
+        Iterator<String> iter = d.iterator();
+        while (iter.hasNext()) {
+            System.out.println(iter.next());
+        }
+    }
 }
