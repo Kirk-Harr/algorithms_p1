@@ -1,4 +1,6 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
@@ -8,14 +10,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class ArrayIterator implements Iterator<Item> {
         private int index = 0;
-        private int[] randomIndexes = StdRandom.permutation(size);
+        private final int[] randomIndexes = StdRandom.permutation(size);
         @Override
         public boolean hasNext() {
-            return index < randomIndexes.length;
+            return index < size;
         }
 
         @Override
         public Item next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
             return s[randomIndexes[index++]];
         }
 
@@ -33,8 +37,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void increaseCapacity() {
         capacity = capacity*2;
         Item[] k = (Item[]) new Object[capacity];
-        for(int i =0; i < size; i++){
-            k[1] = s[i];
+        for(int i = 0; i < size; i++) {
+            k[i] = s[i];
         }
         s = k;
     }
@@ -67,7 +71,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             index = StdRandom.uniform(size - 1);
         }
         Item i = s[index];
-        for (int j = index; j < size-1; j++){
+        for (int j = index; j < size-1; j++) {
             s[j] = s[j+1];
         }
         size--;
@@ -76,7 +80,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return (but do not remove) a random item
     public Item sample() {
-        int index = StdRandom.uniform(size-1);
+        int index;
+        if (size == 1) {
+            index = 0;
+        }
+        else {
+        index = StdRandom.uniform(size - 1);
+        }
         return s[index];
     }
 

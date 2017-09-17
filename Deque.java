@@ -1,10 +1,11 @@
-import com.sun.org.apache.xml.internal.dtm.ref.DTMAxisIterNodeList;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
 public class Deque<Item> implements Iterable<Item> {
+    private Node first;
+    private Node last;
+    private int size;
+
     private class Node {
         Item s;
         Node next;
@@ -33,9 +34,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    private Node first;
-    private Node last;
-    private int size;
+
 
     // construct an empty deque
     public Deque() {
@@ -84,7 +83,7 @@ public class Deque<Item> implements Iterable<Item> {
             size++;
             return;
         }
-        else if (last == null){
+        else if (last == null) {
             last = n;
             first.next = last;
             last.prev = first;
@@ -92,9 +91,9 @@ public class Deque<Item> implements Iterable<Item> {
             return;
         }
         else {
-            Node l = last;
-            l.next = n;
-            n.prev = l;
+            Node oldlast = last;
+            oldlast.next = n;
+            n.prev = oldlast;
             last = n;
             size++;
         }
@@ -104,23 +103,42 @@ public class Deque<Item> implements Iterable<Item> {
     // remove and return the item from the front
     public Item removeFirst() {
         checkSize();
-        Node next = first.next;
-        Node cur = first;
-        next.prev = null;
-        first = next;
+        if (size > 1) {
+            Node next = first.next;
+            Node cur = first;
+            next.prev = null;
+            first = next;
+            size--;
+            return cur.s;
+        }
+        Item i = first.s;
+        first = null;
         size--;
-        return cur.s;
+        return i;
     }
 
     // remove and return the item from the end
     public Item removeLast() {
-        checkSize();
-        Node prev = last.prev;
-        Node cur = last;
-        prev.next = null;
-        last = prev;
+        if (size > 2) {
+            checkSize();
+            Node prev = last.prev;
+            Node cur = last;
+            prev.next = null;
+            last = prev;
+            size--;
+            return cur.s;
+        }
+        else if (size == 2) {
+            Item i = last.s;
+            first.next = null;
+            last = null;
+            size--;
+            return i;
+        }
+        Item i = first.s;
+        first = null;
         size--;
-        return cur.s;
+        return i;
     }
 
     // return an iterator over items in order from front to end
@@ -131,22 +149,7 @@ public class Deque<Item> implements Iterable<Item> {
     // unit testing (optional)
     public static void main(String[] args) {
         Deque<String> d = new Deque<>();
-        d.addFirst("second");
-        d.addLast("third");
-        d.addLast("fourth");
-        d.addFirst("first");
-
-        Iterator<String> iter = d.iterator();
-        while (iter.hasNext()) {
-            System.out.println(iter.next());
-        }
-        d.removeFirst();
-        d.removeLast();
-
-        iter = d.iterator();
-        while (iter.hasNext()) {
-            System.out.println(iter.next());
-        }
-
+        d.addFirst("test");
+        System.out.println(d.removeFirst());
     }
 }
