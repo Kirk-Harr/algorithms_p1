@@ -86,7 +86,9 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
+        if (this.y == that.y)
+            return this.x - that.x;
+        return this.y - that.y;
     }
 
     /**
@@ -96,7 +98,7 @@ public class Point implements Comparable<Point> {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        /* YOUR CODE HERE */
+        return null;
     }
 
 
@@ -116,6 +118,50 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        /* YOUR CODE HERE */
+        Point less = new Point(1,1);
+        Point more = new Point(2,1);
+        System.out.println(less.slopeTo(more));
+        System.out.println(less.slopeTo(less));
+        System.out.println(more.slopeTo(less));
+
+
+
+
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 20);
+        StdDraw.setYscale(0, 20);
+        Point p1 = new Point(12,7);
+        Point p2 = new Point(3,7);
+        Point p3 = new Point(3,10);
+        Point p4 = new Point(2,5);
+        Point p5 = new Point(4,6);
+        Point p6 = new Point(12,12);
+        Point p7 = new Point(7,7);
+        Point p8 = new Point(5,5);
+        Point p9 = new Point(2,6);
+        p1.draw();
+        p2.draw();
+        p3.draw();
+        p4.draw();
+        p5.draw();
+        p6.draw();
+        p7.draw();
+        p8.draw();
+        p9.draw();
+        p1.drawTo(p2);
+        p2.drawTo(p4);
+        p3.drawTo(p6);
+        p4.drawTo(p4);
+        p5.drawTo(p8);
+        p6.drawTo(p9);
+        p7.drawTo(p7);
+        p8.drawTo(p2);
+        p9.drawTo(p1);
+        p6.drawTo(p5);
+        p3.drawTo(p7);
+        p7.drawTo(p3);
+        p2.drawTo(p8);
+        p8.drawTo(p9);
+        StdDraw.show();
     }
 }
