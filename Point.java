@@ -77,7 +77,7 @@ public class Point implements Comparable<Point> {
             // Horizontal Line
             return 0.0;
         } else {
-            return (that.y - this.y) / (that.x - this.y);
+            return (that.y - this.y) / (that.x - this.x);
         }
     }
 
