@@ -12,7 +12,7 @@ import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Point implements Comparable<Point> {
-    public static final Comparator<Point> comparator = new PointComparator();
+    private static final Comparator<Point> comparator = new PointComparator();
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
 
@@ -67,17 +67,17 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        if (this.x == that.x) {
+        if (this.x == that.x && this.y == that.y) {
             // Vertical Line
-            return Double.POSITIVE_INFINITY;
-        } else if (this.x == that.x && this.y == that.y) {
-            // Points Equal
             return Double.NEGATIVE_INFINITY;
+        } else if (this.x == that.x) {
+            // Points Equal
+            return Double.POSITIVE_INFINITY;
         } else if (this.y == that.y) {
             // Horizontal Line
             return 0.0;
         } else {
-            return (that.y - this.y) / (that.x - this.x);
+            return (double)(that.y - this.y) / (double)(that.x - this.x);
         }
     }
 
@@ -95,8 +95,21 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         if (this.y == that.y)
-            return this.x - that.x;
-        return this.y - that.y;
+            if (this.x > that.x) {
+                return 1;
+            }
+            else if (this.x < that.x) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        else if (this.y < that.y) {
+            return -1;
+        }
+        else {
+            return 1;
+        }
     }
 
     /**
@@ -126,50 +139,11 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        Point less = new Point(1,1);
-        Point more = new Point(2,1);
+        Point less = new Point(34,14);
+        Point more = new Point(258,353);
         System.out.println(less.slopeTo(more));
-        System.out.println(less.slopeTo(less));
-        System.out.println(more.slopeTo(less));
-
-
-
-
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setXscale(0, 20);
-        StdDraw.setYscale(0, 20);
-        Point p1 = new Point(12,7);
-        Point p2 = new Point(3,7);
-        Point p3 = new Point(3,10);
-        Point p4 = new Point(2,5);
-        Point p5 = new Point(4,6);
-        Point p6 = new Point(12,12);
-        Point p7 = new Point(7,7);
-        Point p8 = new Point(5,5);
-        Point p9 = new Point(2,6);
-        p1.draw();
-        p2.draw();
-        p3.draw();
-        p4.draw();
-        p5.draw();
-        p6.draw();
-        p7.draw();
-        p8.draw();
-        p9.draw();
-        p1.drawTo(p2);
-        p2.drawTo(p4);
-        p3.drawTo(p6);
-        p4.drawTo(p4);
-        p5.drawTo(p8);
-        p6.drawTo(p9);
-        p7.drawTo(p7);
-        p8.drawTo(p2);
-        p9.drawTo(p1);
-        p6.drawTo(p5);
-        p3.drawTo(p7);
-        p7.drawTo(p3);
-        p2.drawTo(p8);
-        p8.drawTo(p9);
-        StdDraw.show();
+        Point p1 = new Point(7751,14127);
+        Point p2 = new Point(7751,22232);
+        System.out.println(p1.slopeTo(p2));
     }
 }
