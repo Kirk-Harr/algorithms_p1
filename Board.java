@@ -1,43 +1,27 @@
-import java.util.Iterator;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
-    private int[] board;
+    private int[][] board;
     private int n;
 
-    private class BoardIterable<Board extends Comparable<Board>> implements Iterable<Board> {
-        private Board[] boards;
-        private class BoardIterator implements Iterator<Board> {
-            int index;
-            public BoardIterator() {
-                index = 0;
-            }
-            @Override
-            public boolean hasNext() {
-                return index < (n*n)-1;
-            }
 
-            @Override
-            public Board next() {
-                return boards[index++];
-            }
-        }
-        @Override
-        public Iterator<Board> iterator() {
-            return new BoardIterator();
-        }
-
-    }
     // construct a board from an n-by-n array of blocks
     public Board(int[][] blocks) {
         // (where blocks[i][j] = block in row i, column j)
         n = blocks[0].length;
-        board = new int[n*n];
+        board = new int[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                int pos = (i*n)+j;
-                board[pos] = blocks[i][j];
+                board[i][j] = blocks[i][j];
             }
         }
+    }
+
+    // Swap two blocks
+    private void swap(int i, int j, int i2, int j2) {
+        int temp = board[i][j];
+        board[i][j] = board[i2][j2];
+        board[i2][j2] = temp;
     }
 
     // board dimension n
@@ -50,8 +34,7 @@ public class Board {
         int count = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                int pos = (i*n)+j;
-                if (board[pos] != 0 && board[pos] != pos+1)
+                if (board[i][j] != 0 && board[i][j] != ((n*i)+j+1))
                     count++;
             }
         }
@@ -62,7 +45,6 @@ public class Board {
     public int manhattan() {
         int total = 0;
         for (int i = 0; i < board.length; i++) {
-            int cur = board[i];
 
         }
         return total;
@@ -71,18 +53,29 @@ public class Board {
     // is this board the goal board?
     public boolean isGoal() {
         boolean goal = true;
-        for (int i = 0; i < (n*n)-2; i++) {
-            if (board[i] != i+1)
-                goal = false;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int pos = (i*n)+j+1;
+                if (board[i][j] != pos && board[i][j] != 0) {
+                    goal = false;
+                }
+                else if (board[i][j] == 0 && i != n-1 && j != n-1) {
+                    goal = false;
+                }
+            }
         }
-        if (board[(n*n)-1] != 0)
-            goal = false;
         return goal;
     }
 
     // a board that is obtained by exchanging any pair of blocks
     public Board twin() {
-        return null;
+        Board dupe = new Board(board);
+        int i = StdRandom.uniform(n-1);
+        int j = StdRandom.uniform(n-1);
+        int i2 = i;
+        int j2 = StdRandom.uniform(n-1);
+        dupe.swap(i,j,i2,j2);
+        return dupe;
     }
 
     // does this board equal y?
@@ -92,7 +85,7 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        return new BoardIterable();
+        return null;
     }
 
     // string representation of this board (in the output format specified below)
@@ -100,7 +93,7 @@ public class Board {
         String output = "";
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++) {
-                output = output.concat(board[(i*n)+j]+"  ");
+                output = output.concat(board[i][j]+"  ");
             }
             output = output.concat(System.getProperty("line.separator"));
         }
@@ -115,5 +108,9 @@ public class Board {
         System.out.println(b.hamming());
         System.out.println(b.isGoal());
         System.out.println(b);
+        Board c = b.twin();
+        System.out.println(c);
+        System.out.println(c.hamming());
+        System.out.println(c.isGoal());
     }
 }
