@@ -24,6 +24,13 @@ public class Board {
         board[i2][j2] = temp;
     }
 
+    private int goalValue(int i, int j) {
+        if (i == n-1 && j == n-1)
+            return 0;
+        return (n*i)+j+1;
+    }
+
+
     // board dimension n
     public int dimension() {
         return n;
@@ -34,7 +41,7 @@ public class Board {
         int count = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (board[i][j] != 0 && board[i][j] != ((n*i)+j+1))
+                if (board[i][j] != 0 && board[i][j] != goalValue(i,j))
                     count++;
             }
         }
@@ -44,8 +51,16 @@ public class Board {
     // sum of Manhattan distances between blocks and goal
     public int manhattan() {
         int total = 0;
-        for (int i = 0; i < board.length; i++) {
-
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int current = board[i][j];
+                if (current != 0 && current != goalValue(i,j)) {
+                    int xCalc = (current-1) / n;
+                    int yCalc = current - 1 - xCalc * n;
+                    int distance = Math.abs(i-xCalc) + Math.abs(j-yCalc);
+                    total += distance;
+                }
+            }
         }
         return total;
     }
@@ -55,8 +70,8 @@ public class Board {
         boolean goal = true;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                int pos = (i*n)+j+1;
-                if (board[i][j] != pos && board[i][j] != 0) {
+
+                if (board[i][j] != goalValue(i,j) && board[i][j] != 0) {
                     goal = false;
                 }
                 else if (board[i][j] == 0 && i != n-1 && j != n-1) {
@@ -102,15 +117,17 @@ public class Board {
 
     // unit tests (not graded)
     public static void main(String[] args) {
-        int[][] test = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
+        int[][] test = {{1, 3, 2}, {4, 6, 5}, {7, 0, 8}};
         Board b = new Board(test);
         System.out.println(b.dimension());
         System.out.println(b.hamming());
         System.out.println(b.isGoal());
+        System.out.println(b.manhattan());
         System.out.println(b);
         Board c = b.twin();
         System.out.println(c);
         System.out.println(c.hamming());
         System.out.println(c.isGoal());
+        System.out.println(c.manhattan());
     }
 }
