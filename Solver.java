@@ -1,6 +1,11 @@
+import edu.princeton.cs.algs4.MinPQ;
+
 public class Solver {
+    private MinPQ<Board> minPQ;
     // find a solution to the initial board (using the A* algorithm)
-    public Solver(Board initial) {}
+    public Solver(Board initial) {
+        minPQ = new MinPQ<>();
+    }
 
     // is the initial board solvable?
     public boolean isSolvable() {

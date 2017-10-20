@@ -147,6 +147,7 @@ public class Board {
     // string representation of this board (in the output format specified below)
     public String toString() {
         String output = "";
+        output = output.concat(new Integer(n).toString()).concat(System.getProperty("line.separator"));
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++) {
                 output = output.concat(board[i][j]+"  ");
